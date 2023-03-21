@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Notepad</title>
+    <style>
+      #notes {
+        width: 100%;
+        height: 300px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        padding: 10px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #1E90FF;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0066CC;
+      }
+      .note {
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .note:hover {
+        background-color: #f2f2f2;
+      }
+      .note button {
+        background-color: #f44336;
+      }
+      .note button:hover {
+        background-color: #cc0000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>My Notepad</h1>
+    <div>
+      <textarea id="notes" placeholder="Type your notes here"></textarea>
+      <br>
+      <button id="saveBtn">Save</button>
+    </div>
+    <h2>Saved Notes</h2>
+    <div id="savedNotes">
+      
+    </div>
+    <script>
+      // Define the notes array
+      let notes = [];
+
+      // Get the saved notes from local storage
+      if (localStorage.getItem("notes")) {
+        notes = JSON.parse(localStorage.getItem("notes"));
+        displayNotes();
+      }
+
+      // Add event listener to the save button
+      document.getElementById("saveBtn").addEventListener("click", function() {
+        let note = document.getElementById("notes").value;
+        if (note.trim() !== "") {
+          notes.push(note);
+          localStorage.setItem("notes", JSON.stringify(notes));
+          displayNotes();
+          document.getElementById("notes").value = "";
+        }
+      });
+
+      // Function to display saved notes
+      function displayNotes() {
+        let savedNotes = document.getElementById("savedNotes");
+        savedNotes.innerHTML = "";
+        for (let i = 0; i < notes.length; i++) {
+          let noteDiv = document.createElement("div");
+          noteDiv.classList.add("note");
+          noteDiv.innerHTML = notes[i] + "<button onclick='deleteNote(" + i + ")'>Delete</button>";
+          savedNotes.appendChild(noteDiv);
+        }
+      }
+
+      // Function to delete a note
+      function deleteNote(index) {
+        notes.splice(index, 1);
+        localStorage.setItem("notes", JSON.stringify(notes));
+        displayNotes();
+      }
+    </script>
+  </body>
+</html>
